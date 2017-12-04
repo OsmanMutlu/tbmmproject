@@ -6,10 +6,14 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import json
+from scrapy.exceptions import DropItem
 
 class TbmmPipeline(object):
 	def process_item(self, item, spider):
-		return item
+		if item['name'].find('yardım') != -1:
+			return item
+		else:
+			raise DropItem("No keyword matches")
 
 
 class JsonWriterPipeline(object):
