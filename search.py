@@ -1,28 +1,34 @@
 import nltk
-import pandas
+import json
 
 keyword = 'yardım'
 interested_words = ['sosyal','vakfı','vakıf','yoksul','muhtaç']
-negative_words = ['hükümet','afganistan','bosna']
-weights = []
+negative_words = ['hükümet','afganistan','bosna','yardımcı']
+data = []
+	
+with open('items.jl') as f:
+    for line in f:
+        data.append(json.loads(line))
 
-df = pandas.read_json("items.jl", lines = True)
-
-tk = [nltk.word_tokenize(x) for x in df['name']]
-df['tokenized'] = pandas.Series(tk)
-
-for item in df['tokenized']:
+tk = [nltk.word_tokenize(x['name']) for x in data]
+for i in range(0,len(tk)-1):
 	weight = 0
-	for i in range(0,len(item)):
-		item[i] = item[i].lower()
-		if item[i].find(keyword) != -1:
+	for x in range(0,len(tk[i])-1):
+		text = tk[i][x]
+		text = text.lower()
+		if any(word in text for word in negative_words):
+			continue
+		elif text.find(keyword) != -1:
 			weight += 10
-		elif any(word in item[i] for word in interested_words):
-			weight += 4
-		elif any(word in item[i] for word in negative_words):
-			weight -= 4
-	weights.append(weight)
-
-df['weight'] = pandas.Series(weights)
-df = df.sort_values('weight', ascending=False)
-print(df)
+		elif any(word in text for word in interested_words):
+			tk[i][x+1] = tk[i][x+1].lower()
+			if (x != len(tk[i])-1) and (tk[i][x+1].find(keyword) != -1):
+				weight += 10
+			else:
+				weight += 2
+	data[i]['weight'] = weight
+	
+file = open('items2.jl', 'w')
+for x in data:
+	line = json.dumps(x,ensure_ascii=False) + "\n"
+	file.write(line)
