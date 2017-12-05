@@ -22,10 +22,6 @@ NEWSPIDER_MODULE = 'tbmm.spiders'
 ROBOTSTXT_OBEY = True
 AUTOTHROTTLE_ENABLED = True
 
-ITEM_PIPELINES = {
-    'tbmm.pipelines.TbmmPipeline': 300,
-	'tbmm.pipelines.JsonWriterPipeline': 800,
-}
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

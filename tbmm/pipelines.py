@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import json
+import codecs
 from scrapy.exceptions import DropItem
 
 class TbmmPipeline(object):
@@ -19,7 +20,7 @@ class TbmmPipeline(object):
 class JsonWriterPipeline(object):
 
 	def open_spider(self, spider):
-		self.file = open('items.jl', 'w')
+		self.file = codecs.open('items.jl', 'w','utf-8')
 
 	def close_spider(self, spider):
 		self.file.close()
