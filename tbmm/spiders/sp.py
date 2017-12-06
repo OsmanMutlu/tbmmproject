@@ -29,9 +29,9 @@ class spSpider(scrapy.Spider):
 
 	def parse(self, response):
 		text1 = response.xpath('//table[last()]//tr[@onmouseover]')
-		locations = []
+		links = []
 		pages = []
-		location1 = {}
+		location = {}
 		for tr in text1:
 			
 			item = TbmmItem()
@@ -47,18 +47,17 @@ class spSpider(scrapy.Spider):
 			text2 = tr.xpath('td[last()]/table//tr')
 			for x in text2:
 			
-				location1['cilt'] = x.xpath('td[1]/a/b/text()').extract_first()
-				location1['birlesme'] = x.xpath('td[2]/a/b/text()').extract_first()
+				location['link'] = x.xpath('td[2]/a/@href').extract_first()
 				pages = x.xpath('td[last()]/b/a/text()').extract()
 				pages = [x.replace(" ","") for x in pages]
-				location1['sayfa'] = pages
-				locations.append(location1)
-				location1 = {}
+				location['sayfa'] = pages
+				links.append(location)
+				location = {}
 				
-			item['locationList'] = locations
+			item['links'] = links
 			
 			yield item
-			locations = []
+			links = []
 		
 		url = response.xpath('//table[last()]//tr[last()]//i[last()-1]/b/a/@href').extract_first()
 		yield scrapy.Request(url, callback=self.parse)

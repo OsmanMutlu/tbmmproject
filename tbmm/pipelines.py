@@ -16,7 +16,6 @@ class TbmmPipeline(object):
 		else:
 			raise DropItem("No keyword matches")
 
-
 class JsonWriterPipeline(object):
 
 	def open_spider(self, spider):
