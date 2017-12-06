@@ -20,6 +20,9 @@ with codecs.open('items.jl', encoding="utf-8") as f:
 
 #stopwords = [word.replace("\r\n","") for word in stopwords]
 
+#nltk'nin word_tokenize fonksiyonu için 'punkt' paketi gerekli, eğer sizde mevcut değilse bir sonraki satırı uncomment edin.
+#nltk.download('punkt')
+
 tokenized_sentences = [nltk.word_tokenize(x['name']) for x in data]
 
 # for tokenlist in tokenized_sentences:
