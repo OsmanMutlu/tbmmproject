@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from tbmm.items import TbmmItem
+import re
 
 
 class spSpider(scrapy.Spider):
@@ -38,10 +39,7 @@ class spSpider(scrapy.Spider):
 			name = tr.xpath('td[3]/text()').extract()
 			name = [x for x in name if not x=="\n"]
 			name = name[0]
-			name = name.split('\n: ')
-			name = "".join(name)
-			name = name.split('\n')
-			name = "".join(name)
+			name = re.sub(r'\n:? ?',r'',name)
 			item['name'] = name
 			
 			text2 = tr.xpath('td[last()]/table//tr')

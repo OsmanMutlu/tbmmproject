@@ -3,6 +3,7 @@ import nltk
 import json
 import pandas as pd
 import codecs
+import re
 
 keyword = 'yardım'
 interested_words = ['sosyal','vakfı','vakıf','yoksul','muhtaç']
@@ -33,14 +34,12 @@ tokenized_sentences = [nltk.word_tokenize(x['name']) for x in data]
 for i, tokenlist in enumerate(tokenized_sentences):
 	weight = 0
 	for j, text in enumerate(tokenlist):
-		text = text.lower()
-		if any(word in text for word in negative_words):
+		if any(re.match(word, text, re.IGNORECASE) != None for word in negative_words):
 			continue
-		elif text.find(keyword) != -1:
+		elif re.match(keyword, text, re.IGNORECASE) != None:
 			weight += 10
-		elif any(word in text for word in interested_words):
-			tokenlist[j+1] = tokenlist[j+1].lower()
-			if j != len(tokenlist)-1 and tokenlist[j+1].find(keyword) != -1:
+		elif any(re.match(word, text, re.IGNORECASE) != None for word in interested_words):
+			if j != len(tokenlist)-1 and re.match(keyword, tokenlist[j+1], re.IGNORECASE) != None:
 				weight += 10
 			else:
 				weight += 2
